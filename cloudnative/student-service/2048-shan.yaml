@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cloudstudents
+  name: deployment-student-shan
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: student-shan
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: student-shan
+    spec:
+      containers:
+      - image: 991524241826.dkr.ecr.ap-south-2.amazonaws.com/cloudstudents/shanstudent:latest
+        imagePullPolicy: Always
+        name: student-shan
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: cloudstudents
+  name: service-student-shan
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: student-shan
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: cloudstudents
+  name: ingress-student-shan
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-student-shan
+              port:
+                number: 3000
