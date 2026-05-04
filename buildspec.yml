@@ -3,7 +3,7 @@ version: 0.2
 env:
   variables:
     AWS_REGION: "ap-south-2"
-    ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/cloudstudents/shancourse"
+    ECR_REPO: "991524241826.dkr.ecr.ap-south-2.amazonaws.com/cloudstudents/student-service"
 
 phases:
   pre_build:
@@ -14,8 +14,8 @@ phases:
 
   build:
     commands:
-      - echo "Building Docker image..."
-      - docker build -t $ECR_REPO:$IMAGE_TAG ./cloudnative/student-service   # ✅ FIXED PATH
+      - echo "Building Docker image for student-service..."
+      - docker build -t $ECR_REPO:$IMAGE_TAG ./cloudnative/student-service
       - docker tag $ECR_REPO:$IMAGE_TAG $ECR_REPO:latest
 
   post_build:
